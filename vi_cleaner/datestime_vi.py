@@ -1,23 +1,23 @@
 import re
 
 from vietnam_number.number2word import n2w
-from .symbol_vi import vietnamese_re
+from .symbol_vi import vietnamese_re, vietnamese_for_date_re
 
 day_in_month = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 
 _date_seperator = r"(\/|-|\.)"
 
-_full_date_pattern = r"(ngày)?" + vietnamese_re + r"(\d{1,2})" + _date_seperator + r"(\d{1,2})" + _date_seperator + r"(\d{4})" + vietnamese_re
-_full_range_date_pattern = r"(ngày)?" + vietnamese_re + r"(\d{1,2})(\-)(\d{1,2})" + _date_seperator + r"(\d{1,2})" + _date_seperator + r"(\d{4})" + vietnamese_re
+_full_date_pattern = r"(ngày)?" + vietnamese_re + r"(\d{1,2})" + _date_seperator + r"(\d{1,2})" + _date_seperator + r"(\d{4})" + vietnamese_for_date_re
+_full_range_date_pattern = r"(ngày)?" + vietnamese_re + r"(\d{1,2})(\-)(\d{1,2})" + _date_seperator + r"(\d{1,2})" + _date_seperator + r"(\d{4})" + vietnamese_for_date_re
 
-_day_month_pattern = r"(ngày)?" + vietnamese_re + r"(\d{1,2})" + _date_seperator + r"(\d{1,2})" + vietnamese_re
-_range_day_month_pattern = r"(ngày)?" + vietnamese_re + r"(\d{1,2})(\-)(\d{1,2})" + _date_seperator + r"(\d{1,2})" + vietnamese_re
+_day_month_pattern = r"(ngày)?" + vietnamese_re + r"(\d{1,2})" + _date_seperator + r"(\d{1,2})" + vietnamese_for_date_re
+_range_day_month_pattern = r"(ngày)?" + vietnamese_re + r"(\d{1,2})(\-)(\d{1,2})" + _date_seperator + r"(\d{1,2})" + vietnamese_for_date_re
 
-_month_year_pattern = r"(tháng)?" + vietnamese_re + r"(\d{1,2})" + _date_seperator + r"(\d{4})" + vietnamese_re
-_range_month_year_pattern = r"(tháng)?" + vietnamese_re + r"(\d{1,2})(\-)(\d{1,2})" + _date_seperator + r"(\d{4})" + vietnamese_re
+_month_year_pattern = r"(tháng)?" + vietnamese_re + r"(\d{1,2})" + _date_seperator + r"(\d{4})" + vietnamese_for_date_re
+_range_month_year_pattern = r"(tháng)?" + vietnamese_re + r"(\d{1,2})(\-)(\d{1,2})" + _date_seperator + r"(\d{4})" + vietnamese_for_date_re
 
-_full_time_pattern = vietnamese_re + r"(\d{1,2})(g|:|h)(\d{1,2})(p|:|m)(\d{1,2})(s|g)?" + vietnamese_re
-_time_pattern = vietnamese_re + r"(\d{1,2})(g|:|h)(\d{1,2})(p|m)?" + vietnamese_re
+_full_time_pattern = vietnamese_re + r"(\d{1,2})(g|:|h)(\d{1,2})(p|:|m)(\d{1,2})(s|g)?" + vietnamese_for_date_re
+_time_pattern = vietnamese_re + r"(\d{1,2})(g|:|h)(\d{1,2})(p|m)?" + vietnamese_for_date_re
 
 
 def _remove_prefix_zero(text):
