@@ -15,7 +15,7 @@ class Test_Normalize_Abbreviation(unittest.TestCase):
         self.abbreviation_cases = [
             ("em ko bit, sao anh bik", "em không biết, sao anh biết"),
             ("v/v học sinh A", "về việc học sinh A"),
-            ("gà, bò, chó...", "gà, bò, chó vân vân."),
+            ("gà, bò, chó...", "gà, bò, chó..."),
             ("K/g anh chị, đ/c mà chị gửi sai thì phải", "kính gửi anh chị, địa chỉ mà chị gửi sai thì phải"),
         ]
         return super().setUp()

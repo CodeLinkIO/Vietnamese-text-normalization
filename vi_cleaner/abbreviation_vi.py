@@ -5,8 +5,6 @@ _url_re = re.compile(r"([a-zA-Z])\.(com|gov|org|vn|com.vn|edu.vn)")
 
 
 _abbreviations_vi = {
-    ",\.\.\.": " vân vân. ",
-    "\.\.\.": " vân vân. ",
     "v\.v": " vân vân. ",
     "v/v": "về việc",
     "đ/c": "địa chỉ",
