@@ -148,6 +148,8 @@ acronyms_exceptions_vi = {
     "GDP": "gi đi pi",
     "FDI": "ép đê i",
     "ODA": "ô đê a",
+    "VKSND": "viện kiểm soát nhân dân",
+    "HĐXX": "hội đồng xét xử",
 }
 
 non_uppercase_exceptions = {
