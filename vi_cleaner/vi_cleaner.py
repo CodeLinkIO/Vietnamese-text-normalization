@@ -80,7 +80,7 @@ class ViCleaner(object):
         return text
 
     def remove_left_hyphen(self, text):
-        return re.sub(r"(-)", "", text)
+        return re.sub(r"([^\s])(-)([^\s])", r"\1 \3", text)
 
     def clean(self):
         self.text = self.normalize_ascii_vi(self.text)
