@@ -128,6 +128,7 @@ class ViCleaner(object):
 
     def split_sentences(self, text=None, maxLength=DEFAULT_PIECE_MAX_LENGTH):
         text = text if (text is not None) else self.text
+        text = re.sub("(?<![.!?])[\n]+", ".\n", text)
         passages = self.normalize_linebreak(text)
         result = []
         breaks = []
