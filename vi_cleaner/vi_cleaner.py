@@ -1,6 +1,10 @@
 import re
 import unicodedata
 
+from .passage_utils import combine_passages, split_long_passages, split_text_passages
+
+from .sentence_utils import get_pieces
+
 from .letter_vi import normalize_letter_vi
 from .currency_vi import normalize_currency_vi
 from .acronym_vi import spell_acronyms_vi
@@ -9,7 +13,7 @@ from .measurement_vi import normalize_measurement_vi
 from .datestime_vi import normalize_date, normalize_time
 from .roman_number_vi import normalize_roman_numbers
 from .abbreviation_vi import normalize_abbreviations_vi
-from .symbol_vi import opening_brackets_and_punctutations_re, punctutations_re
+from .symbol_vi import DEFAULT_PIECE_MAX_LENGTH, DEFAULT_SENTENCE_MAX_LENGTH, opening_brackets_and_punctutations_re, punctutations_re
 
 
 class ViCleaner(object):
@@ -82,6 +86,9 @@ class ViCleaner(object):
     def remove_left_hyphen(self, text):
         return re.sub(r"([^\s])(-)([^\s])", r"\1 \3", text)
 
+    def normalize_linebreak(self, text):
+        return [e.strip() for e in re.split(r'[\n]+', text)]
+
     def clean(self):
         self.text = self.normalize_ascii_vi(self.text)
         self.text = self.expand_abbreviations(self.text)
@@ -118,3 +125,35 @@ class ViCleaner(object):
         text = self.collapse_whitespace(text)
         text = self.lowercase(text)
         return text
+
+    def split_sentences(self, text=None, maxLength=DEFAULT_PIECE_MAX_LENGTH):
+        text = text if (text is not None) else self.text
+        passages = self.normalize_linebreak(text)
+        result = []
+        breaks = []
+        for passage in passages:
+            temp = get_pieces(passage, maxLength)
+            result += temp
+            if len(breaks) > 0:
+                breaks += [breaks[-1]+len(temp)]
+            else:
+                breaks += [len(temp)]
+        return result, breaks[0:len(breaks)-1]
+
+    def split_passages(self, text=None, maxLength=DEFAULT_SENTENCE_MAX_LENGTH):
+        text = text if (text is not None) else self.text
+        passages = split_text_passages(text, r'[\n]+', False, "\n\t ")
+        sub_passages = split_long_passages(passages, maxLength)
+
+        combined_sub_passages = [combine_passages(
+            i, maxLength) for i in sub_passages]
+        sub_passages_lens = [len(i) for i in combined_sub_passages]
+        breaks = [sum(sub_passages_lens[:i+1])
+              for i in range(len(sub_passages_lens))]
+        flat_list = []
+
+        for sublist in combined_sub_passages:
+            for item in sublist:
+                flat_list.append(item)
+        result = combine_passages(flat_list, maxLength)
+        return result, breaks
