@@ -17,7 +17,7 @@ from .symbol_vi import DEFAULT_PIECE_MAX_LENGTH, DEFAULT_SENTENCE_MAX_LENGTH, op
 
 
 class ViCleaner(object):
-    def __init__(self, text):
+    def __init__(self, text=""):
         text = self.collapse_whitespace(text)
         self.text = " " + text + " "
 

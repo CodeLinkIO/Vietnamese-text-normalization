@@ -6,7 +6,7 @@ from vi_cleaner.vi_cleaner import ViCleaner
 
 class Test_Normalize_DatesTime(unittest.TestCase):
     def setUp(self) -> None:
-        self.cleaner = ViCleaner("")
+        self.cleaner = ViCleaner()
         self.fulldate_cases = [
             ("27/02/2001", "ngày hai mươi bảy tháng hai năm hai nghìn không trăm lẻ một"),
             ("27.02.2001", "ngày hai mươi bảy tháng hai năm hai nghìn không trăm lẻ một"),
