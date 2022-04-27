@@ -7,17 +7,28 @@ day_in_month = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 
 _date_seperator = r"(\/|-|\.)"
 
-_full_date_pattern = r"(ngày)?" + vietnamese_re + r"(\d{1,2})" + _date_seperator + r"(\d{1,2})" + _date_seperator + r"(\d{4})" + vietnamese_for_date_re
-_full_range_date_pattern = r"(ngày)?" + vietnamese_re + r"(\d{1,2})(\-)(\d{1,2})" + _date_seperator + r"(\d{1,2})" + _date_seperator + r"(\d{4})" + vietnamese_for_date_re
+_full_date_pattern = r"(ngày)?" + vietnamese_re + r"(\d{1,2})" + _date_seperator + \
+    r"(\d{1,2})" + _date_seperator + r"(\d{4})" + vietnamese_for_date_re
+_full_range_date_pattern = r"(ngày)?" + vietnamese_re + r"(\d{1,2})(\-)(\d{1,2})" + \
+    _date_seperator + r"(\d{1,2})" + _date_seperator + \
+    r"(\d{4})" + vietnamese_for_date_re
 
-_day_month_pattern = r"(ngày)?" + vietnamese_re + r"(\d{1,2})" + _date_seperator + r"(\d{1,2})" + vietnamese_for_date_re
-_range_day_month_pattern = r"(ngày)?" + vietnamese_re + r"(\d{1,2})(\-)(\d{1,2})" + _date_seperator + r"(\d{1,2})" + vietnamese_for_date_re
+_day_month_pattern = r"(ngày)?" + vietnamese_re + \
+    r"(\d{1,2})" + _date_seperator + r"(\d{1,2})" + vietnamese_for_date_re
+_range_day_month_pattern = r"(ngày)?" + vietnamese_re + \
+    r"(\d{1,2})(\-)(\d{1,2})" + _date_seperator + \
+    r"(\d{1,2})" + vietnamese_for_date_re
 
-_month_year_pattern = r"(tháng)?" + vietnamese_re + r"(\d{1,2})" + _date_seperator + r"(\d{4})" + vietnamese_for_date_re
-_range_month_year_pattern = r"(tháng)?" + vietnamese_re + r"(\d{1,2})(\-)(\d{1,2})" + _date_seperator + r"(\d{4})" + vietnamese_for_date_re
+_month_year_pattern = r"(tháng)?" + vietnamese_re + \
+    r"(\d{1,2})" + _date_seperator + r"(\d{4})" + vietnamese_for_date_re
+_range_month_year_pattern = r"(tháng)?" + vietnamese_re + \
+    r"(\d{1,2})(\-)(\d{1,2})" + _date_seperator + \
+    r"(\d{4})" + vietnamese_for_date_re
 
-_full_time_pattern = vietnamese_re + r"(\d{1,2})(g|:|h)(\d{1,2})(p|:|m)(\d{1,2})(s|g)?" + vietnamese_for_date_re
-_time_pattern = vietnamese_re + r"(\d{1,2})(g|:|h)(\d{1,2})(p|m)?" + vietnamese_for_date_re
+_full_time_pattern = vietnamese_re + \
+    r"(\d{1,2})(g|:|h)(\d{1,2})(p|:|m)(\d{1,2})(s|g)?" + vietnamese_for_date_re
+_time_pattern = vietnamese_re + \
+    r"(\d{1,2})(g|:|h)(\d{1,2})(p|m)?" + vietnamese_for_date_re
 
 
 def _remove_prefix_zero(text):
@@ -36,7 +47,8 @@ def _is_valid_time(hour, minute, second=0):
 
 
 def _expand_full_date(match):
-    prefix, space, day, seporator1, month, seporator2, year, suffix = match.groups(0)
+    prefix, space, day, seporator1, month, seporator2, year, suffix = match.groups(
+        0)
     space = "" if space == 0 else space
     day = _remove_prefix_zero(day)
     month = _remove_prefix_zero(month)
@@ -47,7 +59,8 @@ def _expand_full_date(match):
 
 
 def _expand_range_full_date(match):
-    prefix, space, day_start, hypen, day_end, seporator1, month, seporator2, year, suffix = match.groups(0)
+    prefix, space, day_start, hypen, day_end, seporator1, month, seporator2, year, suffix = match.groups(
+        0)
     space = "" if space == 0 else space
     day_start = _remove_prefix_zero(day_start)
     day_end = _remove_prefix_zero(day_end)
@@ -70,7 +83,8 @@ def _expand_day_month(match):
 
 
 def _expand_range_day_month(match):
-    prefix, space, day_start, hypen, day_end, seporator1, month, suffix = match.groups(0)
+    prefix, space, day_start, hypen, day_end, seporator1, month, suffix = match.groups(
+        0)
     space = "" if space == 0 else space
     day_start = _remove_prefix_zero(day_start)
     day_end = _remove_prefix_zero(day_end)
@@ -91,7 +105,8 @@ def _expand_month_year(match):
 
 
 def _expand_range_month_year(match):
-    prefix, space, month_start, hypen, month_end, seporator, year, suffix = match.groups(0)
+    prefix, space, month_start, hypen, month_end, seporator, year, suffix = match.groups(
+        0)
     space = "" if space == 0 else space
     month_start = _remove_prefix_zero(month_start)
     month_end = _remove_prefix_zero(month_end)
@@ -112,7 +127,8 @@ def _expand_time(math):
 
 
 def _expand_full_time(math):
-    prefix, hour, seporator1, minute, seporator2, second, suffix, ending_space = math.groups(0)
+    prefix, hour, seporator1, minute, seporator2, second, suffix, ending_space = math.groups(
+        0)
     prefix = "" if prefix == 0 else prefix
     hour = _remove_prefix_zero(hour)
     minute = _remove_prefix_zero(minute)
@@ -123,15 +139,25 @@ def _expand_full_time(math):
 
 
 def normalize_date(text):
-    text = re.sub(_range_month_year_pattern, _expand_range_month_year, text, flags=re.IGNORECASE)
-    text = re.sub(_full_range_date_pattern, _expand_range_full_date, text, flags=re.IGNORECASE)
-    text = re.sub(_full_date_pattern, _expand_full_date, text, flags=re.IGNORECASE)
-    text = re.sub(_month_year_pattern, _expand_month_year, text, flags=re.IGNORECASE)
-    text = re.sub(_range_day_month_pattern, _expand_range_day_month, text, flags=re.IGNORECASE)
-    text = re.sub(_day_month_pattern, _expand_day_month, text, flags=re.IGNORECASE)
+    text = re.sub(_range_month_year_pattern,
+                  _expand_range_month_year, text, flags=re.IGNORECASE)
+    text = re.sub(_full_range_date_pattern,
+                  _expand_range_full_date, text, flags=re.IGNORECASE)
+    text = re.sub(_full_date_pattern, _expand_full_date,
+                  text, flags=re.IGNORECASE)
+    text = re.sub(_month_year_pattern, _expand_month_year,
+                  text, flags=re.IGNORECASE)
+    text = re.sub(_range_day_month_pattern,
+                  _expand_range_day_month, text, flags=re.IGNORECASE)
+    text = re.sub(_day_month_pattern, _expand_day_month,
+                  text, flags=re.IGNORECASE)
+    # Replace "tháng bốn" with "tháng tư"
+    text = re.sub("tháng bốn", "tháng tư", text, flags=re.IGNORECASE)
     return text
 
+
 def normalize_time(text):
-    text = re.sub(_full_time_pattern, _expand_full_time, text, flags=re.IGNORECASE)
+    text = re.sub(_full_time_pattern, _expand_full_time,
+                  text, flags=re.IGNORECASE)
     text = re.sub(_time_pattern, _expand_time, text, flags=re.IGNORECASE)
     return text
