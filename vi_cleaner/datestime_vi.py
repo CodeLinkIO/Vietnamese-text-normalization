@@ -151,8 +151,6 @@ def normalize_date(text):
                   _expand_range_day_month, text, flags=re.IGNORECASE)
     text = re.sub(_day_month_pattern, _expand_day_month,
                   text, flags=re.IGNORECASE)
-
-    text = re.sub("tháng bốn", "tháng tư", text, flags=re.IGNORECASE)
     return text
 
 
