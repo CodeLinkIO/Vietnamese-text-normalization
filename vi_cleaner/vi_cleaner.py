@@ -108,8 +108,8 @@ class ViCleaner(object):
         self.text = self.remove_left_hyphen(self.text)
 
         self.text = self.collapse_whitespace(self.text)
-        self.text = self.lowercase(self.text)
         self.text = self.change_thang_bon_to_thang_tu(self.text)
+        self.text = self.lowercase(self.text)
         return self.text
 
     def clean_text(self, text):
@@ -129,6 +129,7 @@ class ViCleaner(object):
         text = self.remove_left_hyphen(text)
 
         text = self.collapse_whitespace(text)
+        text = self.change_thang_bon_to_thang_tu(text)
         text = self.lowercase(text)
         return text
 
