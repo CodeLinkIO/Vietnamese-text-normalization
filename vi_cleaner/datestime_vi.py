@@ -2,10 +2,16 @@ import re
 
 from vietnam_number.number2word import n2w
 from .symbol_vi import vietnamese_re, vietnamese_for_date_re
+from .roman_number_vi import normalize_roman_numbers
 
 day_in_month = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 
 _date_seperator = r"(\/|-|\.)"
+
+_roman_or_number_quarter_re = r"(\d{1,2}|(I|II|III|IV))"
+
+_quarter_month_year_pattern = r"(quý)" + vietnamese_re + _roman_or_number_quarter_re + \
+    _date_seperator + r"(\d{4})" + vietnamese_for_date_re
 
 _full_date_pattern = r"(ngày)?" + vietnamese_re + r"(\d{1,2})" + _date_seperator + \
     r"(\d{1,2})" + _date_seperator + r"(\d{4})" + vietnamese_for_date_re
@@ -36,6 +42,10 @@ def _remove_prefix_zero(text):
     while len(text) > 0 and text[0] == "0" and (len(text) > 1 and text[1] != ","):
         text = text[1:]
     return text if (len(text) > 0) else "0"
+
+
+def _is_valid_quarter(quarter):
+    return quarter in range(1, 5)
 
 
 def _is_valid_date(day, month):
@@ -104,6 +114,21 @@ def _expand_month_year(match):
     return space + " tháng " + n2w(month) + " năm " + n2w(year) + suffix + " "
 
 
+def _expand_quarter_month_year(match):
+    _, space, quarter, _, seporator, year, suffix = match.groups(0)
+    space = "" if space == 0 else space
+    try:
+        quarter = _remove_prefix_zero(quarter)
+        quarter_string = n2w(quarter)
+    except:
+        quarter_string = normalize_roman_numbers(quarter)
+    year = _remove_prefix_zero(year)
+    if quarter not in ["I", "II", "III", "IV"]:
+        if not _is_valid_quarter(int(quarter)) or space == seporator:
+            return match.group(0)
+    return space + " quý " + quarter_string + " năm " + n2w(year) + suffix + " "
+
+
 def _expand_range_month_year(match):
     prefix, space, month_start, hypen, month_end, seporator, year, suffix = match.groups(
         0)
@@ -139,6 +164,8 @@ def _expand_full_time(math):
 
 
 def normalize_date(text):
+    text = re.sub(_quarter_month_year_pattern, _expand_quarter_month_year,
+                  text, flags=re.IGNORECASE)
     text = re.sub(_range_month_year_pattern,
                   _expand_range_month_year, text, flags=re.IGNORECASE)
     text = re.sub(_full_range_date_pattern,
