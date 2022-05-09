@@ -34,8 +34,10 @@ class ViCleaner(object):
 
     def collapse_whitespace(self, text):
         text = re.sub(r"(\s)\1{1,}", r"\1", text)
-        text = re.sub(punctutations_re, self._collapse_whitespace_before_punctuation, text)
-        text = re.sub(opening_brackets_and_punctutations_re, self._collapse_whitespace_after_bracket, text)
+        text = re.sub(punctutations_re,
+                      self._collapse_whitespace_before_punctuation, text)
+        text = re.sub(opening_brackets_and_punctutations_re,
+                      self._collapse_whitespace_after_bracket, text)
         text = re.sub(r"(\s)\1{1,}", r"\1", text)
         text = re.sub(r"\t+", " ", text)
         text = text.strip()
@@ -44,11 +46,11 @@ class ViCleaner(object):
     def lowercase(self, text):
         return text.lower()
 
-    def clean_basic(self,text):
+    def clean_basic(self, text):
         text = self.collapse_whitespace(text)
         text = " " + text + " "
         return text
-        
+
     def normalize_ascii_vi(self, text):
         return unicodedata.normalize("NFC", text)
 
@@ -66,6 +68,9 @@ class ViCleaner(object):
         text = normalize_date(text)
         text = normalize_time(text)
         return text
+
+    def change_thang_bon_to_thang_tu(self, text):
+        return re.sub("tháng bốn", "tháng tư", text, flags=re.IGNORECASE)
 
     def expand_measurement_units(self, text):
         return normalize_measurement_vi(text)
@@ -103,6 +108,7 @@ class ViCleaner(object):
         self.text = self.remove_left_hyphen(self.text)
 
         self.text = self.collapse_whitespace(self.text)
+        self.text = self.change_thang_bon_to_thang_tu(self.text)
         self.text = self.lowercase(self.text)
         return self.text
 
@@ -123,6 +129,7 @@ class ViCleaner(object):
         text = self.remove_left_hyphen(text)
 
         text = self.collapse_whitespace(text)
+        text = self.change_thang_bon_to_thang_tu(text)
         text = self.lowercase(text)
         return text
 
@@ -150,7 +157,7 @@ class ViCleaner(object):
             i, maxLength) for i in sub_passages]
         sub_passages_lens = [len(i) for i in combined_sub_passages]
         breaks = [sum(sub_passages_lens[:i+1])
-              for i in range(len(sub_passages_lens))]
+                  for i in range(len(sub_passages_lens))]
         flat_list = []
 
         for sublist in combined_sub_passages:
