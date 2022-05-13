@@ -97,9 +97,9 @@ class ViCleaner(object):
     def clean(self):
         self.text = self.normalize_ascii_vi(self.text)
         self.text = self.expand_abbreviations(self.text)
+        self.text = self.expand_date_time(self.text)
         self.text = self.expand_roman_numbers(self.text)
         self.text = self.expand_acronyms(self.text)
-        self.text = self.expand_date_time(self.text)
         self.text = self.expand_measurement_units(self.text)
         self.text = self.expand_currency(self.text)
         self.text = self.expand_number(self.text)
