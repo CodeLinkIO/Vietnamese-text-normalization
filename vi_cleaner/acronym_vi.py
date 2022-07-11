@@ -89,6 +89,7 @@ acronyms_exceptions = {
 }
 
 acronyms_exceptions_vi = {
+    "CĐV": "cổ động viên",
     "TV": "ti vi",
     "HĐND": "hội đồng nhân dân",
     "TAND": "toàn án nhân dân",
@@ -204,7 +205,9 @@ def expand_acronyms(m):
 
 def expand_acronyms_vi(text):
     for k, v in acronyms_exceptions_vi.items():
-        text = text.replace(k, v)
+        print(text)
+        text = re.sub(r"\b" + k + r"\b", v, text, flags=re.IGNORECASE)
+        print("after replace: " + text)
     return text
     # else:
     #     text = '.'.join(text) + '.'
