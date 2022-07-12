@@ -18,6 +18,8 @@ _float_number_re = r"[\d]+[,]{1}[\d]+"
 
 _phone_re = r"(((\+84|84|0|0084){1})(3|5|7|8|9))+([0-9]{8})"
 
+_prefix_range= r"(từ|tới|còn|đến|khoảng|sau)"
+
 _end_number_re = (
     r"(-)?("
     + _float_number_re
@@ -59,7 +61,7 @@ _number_re = (
 )
 
 _multiply_number_re = "(" + _normal_number_re + r")(x|\sx\s)(" + _normal_number_re + ")"
-_range_number_re = re.compile(r"(từ|tới|còn|đến)" + _number_re + r"(-|\s\-\s)" + _end_number_re + vietnamese_without_num_re, re.IGNORECASE)
+_range_number_re = re.compile(_prefix_range + _number_re + r"(-|\s\-\s)" + _end_number_re + vietnamese_without_num_re, re.IGNORECASE)
 _special_ordinal_pattern = r"(thứ|hạng)(\s)(1|4)"
 
 

@@ -52,7 +52,7 @@ class Test_Normalize_Number(unittest.TestCase):
         ]
         self.range_number_cases = [
             ("từ 1-2", "từ một đến hai"),
-            ("còn 1-3", "còn một đến ba"),
+            ("còn 1-3", "còn một đến ba")
         ]
         self.roman_number_cases = [
             ("XI", "mười một"),
