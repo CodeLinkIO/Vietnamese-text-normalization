@@ -15,6 +15,7 @@ class Test_Normalize_Currency(unittest.TestCase):
             ("100 euro", "100 ơ rô"),
             ("100 $", "100 đô la"),
             ("11,085,306 VND", "11,085,306 đồng"),
+            ("100 000 ndt", "100 000 nhân dân tệ")
         ]
         self.not_currency_cases = [
             ("tháng 8 đến tháng 9", "tháng 8 đến tháng 9"),

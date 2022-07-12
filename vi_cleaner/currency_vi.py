@@ -14,6 +14,7 @@ _currency_key = {
     "vnd": "đồng",
     "đ": "đồng",
     "¥": "yên",
+    "ndt": "nhân dân tệ",
 }
 
 

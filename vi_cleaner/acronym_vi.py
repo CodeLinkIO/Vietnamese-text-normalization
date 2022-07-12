@@ -114,13 +114,16 @@ acronyms_exceptions_vi = {
     "TTTM": "trung tâm thương mại",
     " TT ": " thủ tướng ",
     "TW": "trung ương",
+    "GD-ĐT": "giáo dục và đào tạo",
     "BCH": "bản chấp hành",
     "CHXHCNVN": "cộng hòa xã hội chủ nghĩa việt nam",
+    "CSGT": "cảnh sát giao thông",
     "MTDTGPMNVN": "mặt trận dân tộc giải phóng miền nam Việt Nam",
     "QDND": "quân đội nhân dân",
     "QLVNCH": "quân lực việt nam cộng hòa",
     "VNCH": "việt nam cộng hòa",
     "LHQ": "liên hợp quốc",
+    "UBKT": "uỷ ban kinh tế",
     "THCS": "trung học cơ sở",
     "THPT": "trung học phổ thông",
     "THPTQG": "trung học phổ thông quốc gia",
@@ -151,6 +154,23 @@ acronyms_exceptions_vi = {
     "ODA": "ô đê a",
     "VKSND": "viện kiểm soát nhân dân",
     "HĐXX": "hội đồng xét xử",
+    "TTXVN": "thông tấn xã việt nam",
+    "F và B": "ép èn bi",
+    "1-0-2": "một không hai",
+    "SN": "sinh năm",
+    "môtô": "mô tô",
+    "ôtô": "ô tô",
+    "êkip": "ê kíp",
+    "youtube": "du túp",
+    "facebook": "phây búc",
+    "tiktok": "tíc tót",
+    "KQXS": "kết quả sổ xố",
+    "XSMB": "xổ số miền bắc",
+    "XSMN": "xổ số miền nam",
+    "XSMT": "xổ số miền tây",
+    "sars-cov":"sát cô vi",
+    "covid":"cô vít",
+    "coronavirus": "cô rô na vai rớt"
 }
 
 non_uppercase_exceptions = {
@@ -205,9 +225,7 @@ def expand_acronyms(m):
 
 def expand_acronyms_vi(text):
     for k, v in acronyms_exceptions_vi.items():
-        print(text)
         text = re.sub(r"\b" + k + r"\b", v, text, flags=re.IGNORECASE)
-        print("after replace: " + text)
     return text
     # else:
     #     text = '.'.join(text) + '.'
