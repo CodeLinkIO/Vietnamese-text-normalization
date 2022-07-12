@@ -28,12 +28,12 @@ class Test_Normalize_DatesTime(unittest.TestCase):
              "Từ ngày hai mươi bảy đến ngày hai mươi tám tháng hai năm hai nghìn, tôi đã được đi chơi."),
         ]
         self.daymonth_cases = [
-            ("27/02", "ngày hai mươi bảy tháng hai"),
-            ("27.02", "ngày hai mươi bảy tháng hai"),
-            ("27-02", "ngày hai mươi bảy tháng hai"),
-            ("32/7", "32/7"),
             ("ngày 27/02", "ngày hai mươi bảy tháng hai"),
-            ("Ngày sinh của tôi là 27/2.",
+            ("ngày 27.02", "ngày hai mươi bảy tháng hai"),
+            ("ngày 27-02", "ngày hai mươi bảy tháng hai"),
+            ("ngày 32/7", "ngày 32/7"),
+            ("ngày 27/02", "ngày hai mươi bảy tháng hai"),
+            ("Ngày sinh của tôi là ngày 27/2.",
              "Ngày sinh của tôi là ngày hai mươi bảy tháng hai."),
             ("0,5-1%", "0,5-1%"),
         ]
