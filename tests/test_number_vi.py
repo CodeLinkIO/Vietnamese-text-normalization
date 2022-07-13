@@ -51,8 +51,8 @@ class Test_Normalize_Number(unittest.TestCase):
             ("Hình chữ nhật 5 x 10", "Hình chữ nhật năm nhân mười"),
         ]
         self.range_number_cases = [
-            ("1-2", "một đến hai"),
-            ("1-3", "một đến ba"),
+            ("từ 1-2", "từ một đến hai"),
+            ("còn 1-3", "còn một đến ba")
         ]
         self.roman_number_cases = [
             ("XI", "mười một"),
