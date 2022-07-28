@@ -34,7 +34,7 @@ def _expand_abbreviations_vi(m):
 def normalize_abbreviations_vi(text):
     text = normalize_speacial_symbol_vi(text)
     text = re.sub(_url_re, _expand_urls_vi, text)
-    text = re.sub(_abbreviations_combine_re, _expand_abbreviations_vi, text, flags=re.IGNORECASE)
+    text = re.sub(r"\b" + _abbreviations_combine_re + r"\b", _expand_abbreviations_vi, text, flags=re.IGNORECASE)
     return text
 
 

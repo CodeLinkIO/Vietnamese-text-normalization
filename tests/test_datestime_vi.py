@@ -36,6 +36,8 @@ class Test_Normalize_DatesTime(unittest.TestCase):
             ("Ngày sinh của tôi là ngày 27/2.",
              "Ngày sinh của tôi là ngày hai mươi bảy tháng hai."),
             ("0,5-1%", "0,5-1%"),
+            ("hôm 17-7", "hôm ngày mười bảy tháng bảy"),
+            ("đêm 17-7", "đêm ngày mười bảy tháng bảy")
         ]
         self.daymonth_range_cases = [
             ("1-2/12", "ngày một đến ngày hai tháng mười hai"),
