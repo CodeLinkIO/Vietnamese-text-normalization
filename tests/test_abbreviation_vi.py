@@ -17,6 +17,8 @@ class Test_Normalize_Abbreviation(unittest.TestCase):
             ("v/v học sinh A", "về việc học sinh A"),
             ("gà, bò, chó...", "gà, bò, chó..."),
             ("K/g anh chị, đ/c mà chị gửi sai thì phải", "kính gửi anh chị, địa chỉ mà chị gửi sai thì phải"),
+            ("kounde","kounde"),
+            ("ko ko kook","không không kook")
         ]
         return super().setUp()
 

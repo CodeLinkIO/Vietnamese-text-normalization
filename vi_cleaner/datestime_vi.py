@@ -8,6 +8,8 @@ day_in_month = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 
 _date_seperator = r"(\/|-|\.)"
 
+_day_periods = r"(ngày|hôm|sáng|trưa|chiều|tối|đêm|khuya)"
+
 _roman_or_number_quarter_re = r"(\d{1,2}|(I|II|III|IV))"
 
 _quarter_month_year_pattern = r"(quý)" + vietnamese_re + _roman_or_number_quarter_re + \
@@ -19,7 +21,7 @@ _full_range_date_pattern = r"(ngày)?" + vietnamese_re + r"(\d{1,2})(\-)(\d{1,2}
     _date_seperator + r"(\d{1,2})" + _date_seperator + \
     r"(\d{4})" + vietnamese_for_date_re
 
-_day_month_pattern = r"(ngày)" + vietnamese_re + \
+_day_month_pattern = _day_periods + vietnamese_re + \
     r"(\d{1,2})" + _date_seperator + r"(\d{1,2})" + vietnamese_for_date_re
 _range_day_month_pattern = r"(ngày)?" + vietnamese_re + \
     r"(\d{1,2})(\-)(\d{1,2})" + _date_seperator + \
@@ -84,12 +86,13 @@ def _expand_range_full_date(match):
 
 def _expand_day_month(match):
     prefix, space, day, seporator1, month, suffix = match.groups(0)
+    prefix = prefix + " ngày" if prefix != "ngày" else prefix
     space = "" if space == 0 else space
     day = _remove_prefix_zero(day)
     month = _remove_prefix_zero(month)
     if not _is_valid_date(int(day), int(month)) or space == seporator1:
         return match.group(0)
-    return space + " ngày " + n2w(day) + " tháng " + n2w(month) + suffix + " "
+    return space + prefix + space + n2w(day) + " tháng " + n2w(month) + suffix + " "
 
 
 def _expand_range_day_month(match):
