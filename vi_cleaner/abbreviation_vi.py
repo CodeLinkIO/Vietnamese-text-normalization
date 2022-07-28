@@ -15,6 +15,8 @@ _abbreviations_vi = {
     "bik": "biết",
 }
 
+_abbreviations_combine_re = r"(" + "|".join(_abbreviations_vi.keys()) + r")"
+
 def _expand_percent_vi(m):
     return " phần trăm"
 
@@ -22,11 +24,17 @@ def _expand_percent_vi(m):
 def _expand_urls_vi(m):
     return f"{m.group(1)} chấm {m.group(2)}"
 
+
+def _expand_abbreviations_vi(m):
+    key = m.group(0)
+    key = key.replace(".", "\.").lower()
+    return _abbreviations_vi[key]
+
+
 def normalize_abbreviations_vi(text):
     text = normalize_speacial_symbol_vi(text)
     text = re.sub(_url_re, _expand_urls_vi, text)
-    for k, v in _abbreviations_vi.items():
-        text = re.sub(r"\b" + k + r"\b", v, text, flags=re.IGNORECASE)
+    text = re.sub(r"\b" + _abbreviations_combine_re + r"\b", _expand_abbreviations_vi, text, flags=re.IGNORECASE)
     return text
 
 
