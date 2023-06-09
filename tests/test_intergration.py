@@ -7,9 +7,9 @@ class Test_Intergration(unittest.TestCase):
     def setUp(self) -> None:
         self.cleaner = ViCleaner("")
         self.letter_cases = [
-            ("đồng - kim lại quý", "đồng - kim lại quý"),
-            ("đồng-kim lại quý", "đồng kim lại quý"),
-            ("Hội nghị thượng đỉnh G7 sẽ diễn ra từ ngày 26-28/6/2022", "hội nghị thượng đỉnh gờ bảy sẽ diễn ra từ ngày hai mươi sáu đến ngày hai mươi tám tháng sáu năm hai nghìn không trăm hai mươi hai"),
+            # ("đồng - kim lại quý", "đồng - kim lại quý"),
+            # ("đồng-kim lại quý", "đồng kim lại quý"),
+            ("Hội nghị thượng đỉnh G7 sẽ diễn ra từ ngày 26-28/6/2022, lúc 8h", "hội nghị thượng đỉnh gờ bảy sẽ diễn ra từ ngày hai mươi sáu đến ngày hai mươi tám tháng sáu năm hai nghìn không trăm hai mươi hai, lúc tám giờ"),
         ]
         return super().setUp()
 

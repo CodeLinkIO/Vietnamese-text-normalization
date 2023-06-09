@@ -8,6 +8,7 @@ from .symbol_vi import vietnamese_set, vietnamese_without_num_re
 
 _negative_symbol_re = r"(.)(-{1})?"
 _normal_number_re = r"[\d]+"
+_ratio_re = r"([\d]+)(\/)([\d]+)"
 _number_with_one_middle_space_re = r"[\d]+[\s]{1}[\d]{3}"
 _number_with_two_middle_space_re = r"[\d]+[\s]{1}[\d]{3}[\s]{1}[\d]{3}"
 _number_with_three_middle_space_re = r"[\d]+[\s]{1}[\d]{3}[\s]{1}[\d]{3}[\s]{1}[\d]{3}"
@@ -18,7 +19,7 @@ _float_number_re = r"[\d]+[,]{1}[\d]+"
 
 _phone_re = r"(((\+84|84|0|0084){1})(3|5|7|8|9))+([0-9]{8})"
 
-_prefix_range= r"(từ|tới|còn|đến|khoảng|sau)"
+_prefix_range= r"(từ|tới|còn|đến|khoảng|sau|có|được)"
 
 _end_number_re = (
     r"(-)?("
@@ -107,7 +108,13 @@ def _expand_multiply_number(match):
     return n2w(number1) + " nhân " + n2w(number2)
 
 
+def _expand_ratio_number(match):
+    number1, multiphy_symbol, number2 = match.groups(0)
+    return n2w(number1) + " trên " + n2w(number2)
+
+
 def normalize_number_vi(text):
+    text = re.sub(_ratio_re, _expand_ratio_number, text)
     text = re.sub(_special_ordinal_pattern, _expand_ordinal, text)
     text = re.sub(_multiply_number_re, _expand_multiply_number, text)
     text = re.sub(_range_number_re, _expand_range, text)

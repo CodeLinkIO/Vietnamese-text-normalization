@@ -23,7 +23,24 @@ from .symbol_vi import DEFAULT_PIECE_MAX_LENGTH, DEFAULT_SENTENCE_MAX_LENGTH, op
 from typing import List
 
 
-class MLMScorer:
+class MLMScorer():
+    def __init__(self, model_name: str='', device: str = ''):
+       pass
+    def score_sentences(self, sentences: List[str]):
+        """
+        returns list of MLM scores for each sentence in list.
+        """
+        return [0.0 for _ in sentences]
+
+    def score_sentence(self, sentence: str):
+        """
+        returns MLM score for sentence.
+        """
+        return 0.0
+
+
+
+class RealMLMScorer(MLMScorer):
     def __init__(self, model_name: str, device: str = 'cpu'):
         """
         Creates MLM scorer from https://arxiv.org/abs/1910.14659.
@@ -97,10 +114,11 @@ class MLMScorer:
 
 
 class ViCleaner(object):
-    def __init__(self, text=""):
+    def __init__(self, text="", ignore_ambiguity=True):
         text = self.collapse_whitespace(text)
         self.text = " " + text + " "
-        self.scorer = MLMScorer(model_name='vinai/phobert-base', device='cuda' if torch.cuda.is_available() else 'cpu')
+        self.ignore_ambiguity = ignore_ambiguity
+        self.scorer = MLMScorer() if ignore_ambiguity  else RealMLMScorer(model_name='vinai/phobert-base', device='cuda' if torch.cuda.is_available() else 'cpu')
         
     def join_lines(self, text):
         return text.replace("\n", " ")
@@ -146,15 +164,16 @@ class ViCleaner(object):
         return normalize_roman_numbers(text)
 
     def expand_date_time(self, text):
-        text = normalize_date(text)
+        text = normalize_date(text, ignore_ambiguity=self.ignore_ambiguity)
         text = normalize_time(text)
         return text
-
-    def change_thang_bon_to_thang_tu(self, text):
-        return re.sub("tháng bốn", "tháng tư", text, flags=re.IGNORECASE)
     
-    def change_phan_bon_to_phan_tu(self, text):
-        return re.sub("phần bốn", "phần tư", text, flags=re.IGNORECASE)
+
+    def change_bon_to_tu(self, text):
+        text = re.sub("tháng bốn", "tháng tư", text, flags=re.IGNORECASE)
+        text=  re.sub("phần bốn", "phần tư", text, flags=re.IGNORECASE)
+        return text
+    
 
     def expand_measurement_units(self, text):
         return normalize_measurement_vi(text)
@@ -188,7 +207,7 @@ class ViCleaner(object):
         # ratio
         c = f'{self.expand_number(head)} phần {self.expand_number(tail)}'
         c = self.collapse_whitespace(c)
-        c = self.change_phan_bon_to_phan_tu(c)
+        c = self.change_bon_to_tu(c)
         candidate_replacements.append(c)
 
         # 'out of'
@@ -206,14 +225,14 @@ class ViCleaner(object):
         if float(tail) <= 12 and float(head) <= 31:
             c = f'ngày {self.expand_number(head)} tháng {self.expand_number(tail)}'
             c = self.collapse_whitespace(c)
-            c = self.change_thang_bon_to_thang_tu(c)
+            c = self.change_bon_to_tu(c)
             candidate_replacements.append(c)
 
         # mm/yy candidate
         if float(head) <= 12:
             c = f'tháng {self.expand_number(head)} năm {self.expand_number(tail)}'
             c = self.collapse_whitespace(c)
-            c = self.change_thang_bon_to_thang_tu(c)
+            c = self.change_bon_to_tu(c)
             candidate_replacements.append(c)
 
         return candidate_replacements
@@ -247,7 +266,7 @@ class ViCleaner(object):
             result += best + ' '
         return result
 
-    def clean_text_pre_candidates(self, text):
+    def clean_text_pre_candidates(self, text:str):
         text = self.collapse_whitespace(text)
         text = " " + text + " "
         text = self.normalize_ascii_vi(text)
@@ -268,23 +287,26 @@ class ViCleaner(object):
         text = self.expand_measurement_units(text)
         text = self.expand_currency(text)
         text = self.expand_acronyms(text)
-        text = self.expand_abbreviations(text)
         text = self.expand_number(text)
+        text = self.change_bon_to_tu(text)
+        text = self.expand_abbreviations(text)
         text = self.expand_letter(text)
         text = self.collapse_whitespace(text)
         text = self.lowercase(text)
 
         return text
+    
     def clean(self, text):
         text = self.clean_text_pre_candidates(text)
-        text = self.clean_with_ambiguity(text)
+        if not self.ignore_ambiguity:
+            text = self.clean_with_ambiguity(text)
         text = self.clean_text_post_candidates(text)
         return text
 
     def split_sentences(self, text=None, maxLength=DEFAULT_PIECE_MAX_LENGTH):
         text = text if (text is not None) else self.text
         text = re.sub("(?<![.!?])[\n]+", ".\n", text)
-        passages = self.normalize_linebreak(text)
+        passages = sent_tokenize(text=text)
         result = []
         breaks = []
         for passage in passages:

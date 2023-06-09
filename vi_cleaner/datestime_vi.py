@@ -8,9 +8,14 @@ day_in_month = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 
 _date_seperator = r"(\/|-|\.)"
 
-_day_periods = r"(ngày|hôm|sáng|trưa|chiều|tối|đêm|khuya)"
+_day_periods = r"(ngày|hôm|sáng|trưa|chiều|tối|đêm|khuya|vào)"
+
+_time_prefix = r"(khi|lúc|vào)"
+
 
 _roman_or_number_quarter_re = r"(\d{1,2}|(I|II|III|IV))"
+
+# unambigous cases
 
 _quarter_month_year_pattern = r"(quý)" + vietnamese_re + _roman_or_number_quarter_re + \
     _date_seperator + r"(\d{4})" + vietnamese_for_date_re
@@ -24,13 +29,13 @@ _full_range_date_pattern = r"(ngày)?" + vietnamese_re + r"(\d{1,2})(\-)(\d{1,2}
 _day_month_pattern = _day_periods + vietnamese_re + \
     r"(\d{1,2})" + _date_seperator + r"(\d{1,2})" + vietnamese_for_date_re
 
-_range_day_month_pattern = r"(ngày)" + vietnamese_re + \
+_range_day_month_pattern_definite = r"(ngày)" + vietnamese_re + \
     r"(\d{1,2})(\-)(\d{1,2})" + _date_seperator + \
     r"(\d{1,2})" + vietnamese_for_date_re
 
-_month_year_pattern = r"(tháng)" + vietnamese_re + \
+_month_year_pattern_definite = r"(tháng)" + vietnamese_re + \
     r"(\d{1,2})" + _date_seperator + r"(\d{4})" + vietnamese_for_date_re
-_range_month_year_pattern = r"(tháng)" + vietnamese_re + \
+_range_month_year_pattern_definite = r"(tháng)" + vietnamese_re + \
     r"(\d{1,2})(\-)(\d{1,2})" + _date_seperator + \
     r"(\d{4})" + vietnamese_for_date_re
 
@@ -38,6 +43,19 @@ _full_time_pattern = vietnamese_re + \
     r"(\d{1,2})(g|:|h)(\d{1,2})(p|:|m)(\d{1,2})(s|g)?" + vietnamese_for_date_re
 _time_pattern = vietnamese_re + \
     r"(\d{1,2})(g|:|h)(\d{1,2})(p|m)?" + vietnamese_for_date_re
+_time_hour_only_pattern =  vietnamese_re + \
+    r"(\d{1,2})(g|:|h)" + vietnamese_for_date_re
+
+# ambigous cases
+
+_range_day_month_pattern = r"(ngày)?" + vietnamese_re + \
+    r"(\d{1,2})(\-)(\d{1,2})" + _date_seperator + \
+    r"(\d{1,2})" + vietnamese_for_date_re
+_month_year_pattern = r"(tháng)?" + vietnamese_re + \
+    r"(\d{1,2})" + _date_seperator + r"(\d{4})" + vietnamese_for_date_re
+_range_month_year_pattern = r"(tháng)?" + vietnamese_re + \
+    r"(\d{1,2})(\-)(\d{1,2})" + _date_seperator + \
+    r"(\d{4})" + vietnamese_for_date_re
 
 
 def _remove_prefix_zero(text):
@@ -154,6 +172,14 @@ def _expand_time(math):
         return math.group(0)
     return prefix + " " + n2w(hour) + " giờ " + n2w(minute) + " phút" + ending_space + " "
 
+def _expand_hour(math):
+    prefix, hour, suffix, ending_space = math.groups(0)
+    prefix = "" if prefix == 0 else prefix
+    hour = _remove_prefix_zero(hour)
+    if not _is_valid_time(int(hour), 0):
+        return math.group(0)
+    return prefix + " " + n2w(hour) + " giờ "  + ending_space + " "
+
 
 def _expand_full_time(math):
     prefix, hour, seporator1, minute, seporator2, second, suffix, ending_space = math.groups(
@@ -167,26 +193,45 @@ def _expand_full_time(math):
     return prefix + " " + n2w(hour) + " giờ " + n2w(minute) + " phút " + n2w(second) + " giây" + ending_space + " "
 
 
-def normalize_date(text):
-    text = re.sub(_quarter_month_year_pattern, _expand_quarter_month_year,
-                  text, flags=re.IGNORECASE)
-    text = re.sub(_range_month_year_pattern,
-                  _expand_range_month_year, text, flags=re.IGNORECASE)
-    text = re.sub(_full_range_date_pattern,
-                  _expand_range_full_date, text, flags=re.IGNORECASE)
-    text = re.sub(_full_date_pattern, _expand_full_date,
-                  text, flags=re.IGNORECASE)
-    text = re.sub(_month_year_pattern, _expand_month_year,
-                  text, flags=re.IGNORECASE)
-    text = re.sub(_range_day_month_pattern,
-                  _expand_range_day_month, text, flags=re.IGNORECASE)
-    text = re.sub(_day_month_pattern, _expand_day_month,
-                  text, flags=re.IGNORECASE)
+def normalize_date(text, ignore_ambiguity=True):
+    if not ignore_ambiguity:
+        text = re.sub(_quarter_month_year_pattern, _expand_quarter_month_year,
+                    text, flags=re.IGNORECASE)
+        text = re.sub(_range_month_year_pattern_definite,
+                    _expand_range_month_year, text, flags=re.IGNORECASE)
+        text = re.sub(_full_range_date_pattern,
+                    _expand_range_full_date, text, flags=re.IGNORECASE)
+        text = re.sub(_full_date_pattern, _expand_full_date,
+                    text, flags=re.IGNORECASE)
+        text = re.sub(_month_year_pattern_definite, _expand_month_year,
+                    text, flags=re.IGNORECASE)
+        text = re.sub(_range_day_month_pattern_definite,
+                    _expand_range_day_month, text, flags=re.IGNORECASE)
+        text = re.sub(_day_month_pattern, _expand_day_month,
+                    text, flags=re.IGNORECASE)
+    else:
+        text = re.sub(_quarter_month_year_pattern, _expand_quarter_month_year,
+                    text, flags=re.IGNORECASE)
+        text = re.sub(_range_month_year_pattern,
+                    _expand_range_month_year, text, flags=re.IGNORECASE)
+        text = re.sub(_full_range_date_pattern,
+                    _expand_range_full_date, text, flags=re.IGNORECASE)
+        text = re.sub(_full_date_pattern, _expand_full_date,
+                    text, flags=re.IGNORECASE)
+        text = re.sub(_month_year_pattern, _expand_month_year,
+                    text, flags=re.IGNORECASE)
+        text = re.sub(_range_day_month_pattern,
+                    _expand_range_day_month, text, flags=re.IGNORECASE)
+        text = re.sub(_day_month_pattern, _expand_day_month,
+                    text, flags=re.IGNORECASE)
     return text
+
 
 
 def normalize_time(text):
     text = re.sub(_full_time_pattern, _expand_full_time,
                   text, flags=re.IGNORECASE)
     text = re.sub(_time_pattern, _expand_time, text, flags=re.IGNORECASE)
+    text = re.sub(_time_hour_only_pattern, _expand_hour, text, flags=re.IGNORECASE)
+
     return text

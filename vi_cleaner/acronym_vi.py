@@ -18,6 +18,8 @@ acronyms_exceptions_vi = {
     "TP.HCM": "thành phố hồ chí minh",
     "VN": "việt nam",
     "BCHTW": "ban chấp hành trung ương",
+    "ĐT": "đường tỉnh",
+    "QL": "quốc lộ",
     "UBND": "uỷ ban nhân dân",
     "TPHCM": "thành phố hồ chí minh",
     "TP": "thành phố",

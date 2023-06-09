@@ -24,7 +24,7 @@ class Test_Normalize_Monthtime(unittest.TestCase):
             with self.subTest(value=value, expected=expected):
                 value = self.cleaner.clean_basic(value)
                 actual = self.cleaner.clean_text_post_candidates(self.cleaner.clean_text_pre_candidates(value))
-                actual = self.cleaner.change_thang_bon_to_thang_tu(actual)
+                actual = self.cleaner.change_bon_to_tu(actual)
                 actual = self.cleaner.collapse_whitespace(actual)
                 self.assertEqual(actual, expected)
 
