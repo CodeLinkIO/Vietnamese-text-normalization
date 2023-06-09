@@ -23,13 +23,14 @@ _full_range_date_pattern = r"(ngày)?" + vietnamese_re + r"(\d{1,2})(\-)(\d{1,2}
 
 _day_month_pattern = _day_periods + vietnamese_re + \
     r"(\d{1,2})" + _date_seperator + r"(\d{1,2})" + vietnamese_for_date_re
-_range_day_month_pattern = r"(ngày)?" + vietnamese_re + \
+
+_range_day_month_pattern = r"(ngày)" + vietnamese_re + \
     r"(\d{1,2})(\-)(\d{1,2})" + _date_seperator + \
     r"(\d{1,2})" + vietnamese_for_date_re
 
-_month_year_pattern = r"(tháng)?" + vietnamese_re + \
+_month_year_pattern = r"(tháng)" + vietnamese_re + \
     r"(\d{1,2})" + _date_seperator + r"(\d{4})" + vietnamese_for_date_re
-_range_month_year_pattern = r"(tháng)?" + vietnamese_re + \
+_range_month_year_pattern = r"(tháng)" + vietnamese_re + \
     r"(\d{1,2})(\-)(\d{1,2})" + _date_seperator + \
     r"(\d{4})" + vietnamese_for_date_re
 

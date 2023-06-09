@@ -17,7 +17,7 @@ class Test_Intergration(unittest.TestCase):
         for value, expected in self.letter_cases:
             with self.subTest(value=value, expected=expected):
                 value = self.cleaner.clean_basic(value)
-                actual = self.cleaner.clean_text(value)
+                actual = self.cleaner.clean(value)
                 actual = self.cleaner.collapse_whitespace(actual)
                 self.assertEqual(actual, expected)
 

@@ -1,5 +1,5 @@
 import unittest
-from vi_cleaner.abbreviation_vi import normalize_abbreviations_vi, normalize_speacial_symbol_vi
+from vi_cleaner.abbreviation_vi import normalize_abbreviations_vi, normalize_special_symbol_vi
 
 from vi_cleaner.vi_cleaner import ViCleaner
 
@@ -26,7 +26,7 @@ class Test_Normalize_Abbreviation(unittest.TestCase):
         for value, expected in self.speacial_symbol_cases:
             with self.subTest(value=value, expected=expected):
                 value = self.cleaner.clean_basic(value)
-                actual = normalize_speacial_symbol_vi(value)
+                actual = normalize_special_symbol_vi(value)
                 actual = self.cleaner.collapse_whitespace(actual)
                 self.assertEqual(actual, expected)
 

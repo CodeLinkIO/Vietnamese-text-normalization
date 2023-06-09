@@ -3,30 +3,33 @@ import re
 from .symbol_vi import vietnamese_set
 
 _letter_key_vi = {
-    "a": "ây",
+    "a": "a",
     "b": "bê",
     "c": "xê",
     "d": "dê",
+    "e": "e",
     "đ": "đê",
     "f": "ép",
     "g": "gờ",
     "h": "hát",
-    "i": "ai",
+    "i": "i",
     "j": "chây",
-    "k": "kây",
+    "k": "ca",
     "l": "lờ",
     "m": "em mờ",
     "n": "en nờ",
     "o": "ô",
     "p": "pê",
-    "q": "kiu",
+    "q": "qui",
     "r": "rờ",
     "s": "ét",
-    "t": "ti",
-    "v": "vi",
+    "t": "tê",
+    "u": "u",
+    "v": "vê",
     "w": "vê kép",
     "x": "ít",
-    "z": "dét",
+    "z": "giét",
+    "&": "èn",
 }
 _letter_combine_re = "|".join(_letter_key_vi.keys())
 _quotes_symbol = r"(\"|\')?"
@@ -51,3 +54,12 @@ def _expand_letter_vi(match):
 def normalize_letter_vi(text):
     text = re.sub(_letter_re, _expand_letter_vi, text, flags=re.IGNORECASE)
     return text
+
+def spell_letters(m: re.Match[str]):
+    newText = ''
+    for letter in m.group(0):
+        if letter.lower() in _letter_key_vi:
+            newText += _letter_key_vi[letter.lower()] + ' '
+        else:
+            newText += letter
+    return newText

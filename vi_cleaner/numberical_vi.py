@@ -65,7 +65,7 @@ _range_number_re = re.compile(_prefix_range + _number_re + r"(-|\s\-\s)" + _end_
 _special_ordinal_pattern = r"(thứ|hạng)(\s)(1|4)"
 
 
-def _expand_number(match):
+def expand_number(match):
     prefix, negative_symbol, number = match.groups(0)
     number = _remove_prefix_zero(number)
     if prefix in vietnamese_set:
@@ -112,5 +112,5 @@ def normalize_number_vi(text):
     text = re.sub(_multiply_number_re, _expand_multiply_number, text)
     text = re.sub(_range_number_re, _expand_range, text)
     text = re.sub(_phone_re, _expand_phone, text)
-    text = re.sub(_number_re, _expand_number, text)
+    text = re.sub(_number_re, expand_number, text)
     return text
