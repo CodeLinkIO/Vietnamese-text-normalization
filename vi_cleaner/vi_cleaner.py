@@ -25,7 +25,7 @@ from typing import List
 
 class MLMScorer():
     def __init__(self, model_name: str='', device: str = ''):
-       pass
+        pass
     def score_sentences(self, sentences: List[str]):
         """
         returns list of MLM scores for each sentence in list.
@@ -73,7 +73,7 @@ class RealMLMScorer(MLMScorer):
         for m_idx, _ in enumerate(tokens):
             masked = self.__mask_text__(m_idx, tokens)
             mask_idx.append(m_idx)
-            ids.append(self.tokenizer.encode(masked))
+            ids.append(self.tokenizer.convert_tokens_to_ids([self.tokenizer.cls_token] + masked + [self.tokenizer.sep_token]))
             id_len = len(ids[-1])
             token_type.append([0] * id_len)
             attn_mask.append([1] * id_len)
@@ -114,11 +114,11 @@ class RealMLMScorer(MLMScorer):
 
 
 class ViCleaner(object):
-    def __init__(self, text="", ignore_ambiguity=True):
+    def __init__(self, text="", model_name ='vinai/phobert-base', ignore_ambiguity=True):
         text = self.collapse_whitespace(text)
         self.text = " " + text + " "
         self.ignore_ambiguity = ignore_ambiguity
-        self.scorer = MLMScorer() if ignore_ambiguity  else RealMLMScorer(model_name='vinai/phobert-base', device='cuda' if torch.cuda.is_available() else 'cpu')
+        self.scorer = MLMScorer() if ignore_ambiguity  else RealMLMScorer(model_name=model_name, device='cuda' if torch.cuda.is_available() else 'cpu')
         
     def join_lines(self, text):
         return text.replace("\n", " ")
@@ -216,7 +216,7 @@ class ViCleaner(object):
         candidate_replacements.append(c)
 
         # symbol
-        c = f'{self.expand_number(head)} xuyệt {self.expand_number(tail)}'
+        c = f'{self.expand_number(head)} xẹt {self.expand_number(tail)}'
         c = self.collapse_whitespace(c)
         candidate_replacements.append(c)
 
