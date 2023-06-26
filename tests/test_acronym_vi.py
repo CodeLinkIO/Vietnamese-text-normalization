@@ -14,6 +14,8 @@ class Test_Normalize_Acronym(unittest.TestCase):
             ("TTTM Sài Gòn","trung tâm thương mại Sài Gòn"),
             ("WTO, IQ, EQ, BBC, GPRS", "vê kép tê ô, ai kiu, i kiu, bi bi xi, gờ pê rờ ét"),
             ("PSG","pê ét gờ"),
+            ("ICPP","i xê pê pê"),
+            ("McKinsey","McKinsey"),
             ("COVID-19","cô vít-19"),
             ("có 1-0-2", "có một không hai")
         ]

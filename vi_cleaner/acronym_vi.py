@@ -101,7 +101,7 @@ non_uppercase_exceptions = {
 }
 
 # must ignore roman numerals
-_acronym_re = re.compile(r'\b(?:[\d]*[a-z]*[A-Z]\&{0,1}[a-z]*[\d]*){2,}')
+_acronym_re = re.compile(r"([a-z]*[A-Z][A-Z]+)s?\.?")
 
     
 
