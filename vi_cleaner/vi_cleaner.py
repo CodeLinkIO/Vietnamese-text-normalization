@@ -73,6 +73,7 @@ class RealMLMScorer(MLMScorer):
         for m_idx, _ in enumerate(tokens):
             masked = self.__mask_text__(m_idx, tokens)
             mask_idx.append(m_idx)
+           # ids.append(self.tokenizer.encode(masked))
             ids.append(self.tokenizer.convert_tokens_to_ids([self.tokenizer.cls_token] + masked + [self.tokenizer.sep_token]))
             id_len = len(ids[-1])
             token_type.append([0] * id_len)
@@ -118,7 +119,7 @@ class ViCleaner(object):
         text = self.collapse_whitespace(text)
         self.text = " " + text + " "
         self.ignore_ambiguity = ignore_ambiguity
-        self.scorer = MLMScorer() if ignore_ambiguity  else RealMLMScorer(model_name=model_name, device='cuda' if torch.cuda.is_available() else 'cpu')
+        self.scorer = MLMScorer() if ignore_ambiguity else RealMLMScorer(model_name=model_name, device='cuda' if torch.cuda.is_available() else 'cpu')
         
     def join_lines(self, text):
         return text.replace("\n", " ")

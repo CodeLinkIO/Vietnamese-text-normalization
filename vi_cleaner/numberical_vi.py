@@ -114,6 +114,7 @@ def _expand_ratio_number(match):
 
 
 def normalize_number_vi(text):
+    text = ' ' + text + ' '
     text = re.sub(_ratio_re, _expand_ratio_number, text)
     text = re.sub(_special_ordinal_pattern, _expand_ordinal, text)
     text = re.sub(_multiply_number_re, _expand_multiply_number, text)
