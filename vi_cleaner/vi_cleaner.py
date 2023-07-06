@@ -169,6 +169,14 @@ class ViCleaner(object):
         text = normalize_time(text)
         return text
     
+    def expand_versioning(self, text):
+        regex = r'\b\d(\.\d{1,2})+\b'
+        def repl(m):
+            text = m.group(0)
+            return ' chấm '.join(text.split('.'))
+        text = re.sub(regex, repl, text)
+        return text
+        
 
     def change_bon_to_tu(self, text):
         text = re.sub("tháng bốn", "tháng tư", text, flags=re.IGNORECASE)
@@ -288,6 +296,7 @@ class ViCleaner(object):
         text = self.expand_measurement_units(text)
         text = self.expand_currency(text)
         text = self.expand_acronyms(text)
+        text = self.expand_versioning(text)
         text = self.expand_number(text)
         text = self.change_bon_to_tu(text)
         text = self.expand_abbreviations(text)
